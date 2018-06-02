@@ -1,27 +1,12 @@
-## geospatial RStudio + Shiny
+# nrel-docker
 
-Want spatial capabilities (especially rgdal, raster and leaflet packages) in a common R instance that can be used with:
+These [Docker](https://www.docker.com/what-docker) instructions are for running the NREL Competing Uses application ([github.com/ecoquants/nrel-uses:app](https://github.com/ecoquants/nrel-uses/tree/master/app)) in the NREL Amazon cluster using the following server software:
 
-- RStudio Server: IDE for editing
-- Shiny Server: web application framework
+- [RStudio](https://www.rstudio.com/products/rstudio/) Server (port `8787`): integrated development environment (IDE) for editing R code
+- [Shiny](https://shiny.rstudio.com) Server (port `3838`): web application framework
 
-To do this, composed a Dockerfile and `docker build` Shiny into the rocker/geospatial Docker file by:
+This involves two steps:
 
-- adding the line `RUN export ADD=shiny && bash /etc/cont-init.d/add` to [rocker-org/geospatial/3.5.0/Dockerfile](https://github.com/rocker-org/geospatial/blob/master/3.5.0/Dockerfile) into new Dockerfile in [github.com/marinebon/docker-rstudio-shiny](https://github.com/marinebon/docker-rstudio-shiny)
+1. Docker `build` of server software image: [rstudio-shiny/](https://github.com/ecoquants/nrel-docker/tree/master/rstudio-shiny)
 
-- `docker build` image, which takes ~ 3 hours:
-
-  ```bash
-  docker build -t bdbest/rstudio-shiny:R-3.5-geospatial \
-    https://github.com/ecoquants/nrel-docker.git#master:rstudio-shiny
-  ```
-
-- `docker login` and `docker push` image
-
-  ```bash
-  docker login # registed as bdbest (bdbest@gmail.com)
-  docker push bdbest/rstudio-shiny:3.5-geospatial
-  ```
-  
-Reference: [Deploying rocker/geospatial app to rocker/shiny? · Issue #235 · rocker-org/rocker](https://github.com/rocker-org/rocker/issues/235#issuecomment-300065850)
-  
+2. Docker `run` of the image in the Amazon cluster: [nrel-docker.sh](https://github.com/ecoquants/nrel-docker/blob/master/nrel-docker.sh)

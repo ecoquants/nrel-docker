@@ -24,15 +24,17 @@ docker run --name "rstudio-shiny" \
   -e USER=$USER -e PASSWORD=`cat $PASSWD` \
   -d -t bdbest/rstudio-shiny:R-3.4-geospatial
 
-# Add symlink: github/nrel-uses/app -> apps/uses
-docker exec -i -t "rstudio-shiny" ln -s "/github/nrel-uses/app" "/srv/shiny-server/uses"
+alias de="docker exec -i -t 'rstudio-shiny'"
 
-# Install packages (TODO: update in Dockerfile with upgrade to 3.5, ie rstudio-shiny:R-3.5-geospatial)
-PACKAGES="c('leaflet','shinydashboard')"
-docker exec -i -t "rstudio-shiny" Rscript -e "install.packages($PACKAGES, repos = 'http://cran.us.r-project.org')"
+# Add symlink: github/nrel-uses/app -> apps/uses
+de ln -s "/github/nrel-uses/app" "/srv/shiny-server/uses"
+
+# Packages installed already with Dockerfile build 3.5; quick install without rebuild for future...
+#PACKAGES="c('leaflet','shinydashboard')"
+#de -i -t "rstudio-shiny" Rscript -e "install.packages($PACKAGES, repos = 'http://cran.us.r-project.org')"
 
 # Add symlinks for ease of navigation in RStudio
-docker exec -i -t "rstudio-shiny" ln -s "/data" "/home/$USER/data"
-docker exec -i -t "rstudio-shiny" ln -s "/github" "/home/$USER/github"
-docker exec -i -t "rstudio-shiny" ln -s "/srv/shiny-server" "/home/$USER/apps"
-docker exec -i -t "rstudio-shiny" ln -s "/var/log/shiny-server" "/home/$USER/log"
+de ln -s "/data" "/home/$USER/data"
+de ln -s "/github" "/home/$USER/github"
+de ln -s "/srv/shiny-server" "/home/$USER/apps"
+de ln -s "/var/log/shiny-server" "/home/$USER/log"
