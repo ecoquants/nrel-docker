@@ -1,4 +1,4 @@
-# Build rstudio-shiny docker image
+# rstudio-shiny: build docker image
 
 Want spatial capabilities (especially rgdal, raster and leaflet packages) in a common R instance that can be used with:
 
@@ -19,8 +19,7 @@ To do this, composed a Dockerfile from geoserver R version with Shiny tag:
     "https://github.com/ecoquants/nrel-docker.git#master:rstudio-shiny"; \
   date
   ```
-  on BB's Mac, start: Sat Jun  2 15:12:34 PDT 2018
-  end:  ?
+  on BB's Mac: 1.5 hr
 
 - `docker login` and `docker push` image
 
