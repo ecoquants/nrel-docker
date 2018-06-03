@@ -20,6 +20,7 @@ To do this, composed a Dockerfile from geoserver R version with Shiny tag:
   date
   ```
   on BB's Mac: 1.5 hr
+  round 2 with FROM rocker/geospatial: 11 min
 
 - `docker login` and `docker push` image
 

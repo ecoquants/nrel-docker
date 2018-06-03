@@ -1,4 +1,4 @@
-FROM rocker/geospatial
+FROM rocker/geospatial:latest
 MAINTAINER "Ben Best" ben@ecoquants.com
 
 ## packages for github.com/ecoquants/nrel-uses:app
