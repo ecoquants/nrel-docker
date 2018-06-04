@@ -1,11 +1,16 @@
 FROM rocker/geospatial:latest
 MAINTAINER "Ben Best" ben@ecoquants.com
 
-## packages for github.com/ecoquants/nrel-uses:app
+## install extra packages 
 RUN install2.r --error \
+  ## [Error when trying to install shiny · Issue #2039 · rstudio/shiny](https://github.com/rstudio/shiny/issues/2039)
   Rcpp \
   httpuv \
   shiny \
+  ## for github.com/ecoquants/nrel-uses:app
+  here \
+  glue \
+  fs \
   leaflet \
   shinydashboard
 
