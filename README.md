@@ -8,12 +8,12 @@ These [Docker](https://www.docker.com/what-docker) instructions are for running 
 To setup the Docker image, I ran the following Docker `build` per the `Dockerfile` and `README.md` in [rstudio-shiny/](https://github.com/ecoquants/nrel-docker/tree/master/rstudio-shiny). Now you should only need to prepare directories, modify and run the [nrel-docker.sh](https://github.com/ecoquants/nrel-docker/blob/master/nrel-docker.sh):
 
 1. Setup the following directories on the server for read/write by users `shiny` (uid=998) and `ben` (uid=1000) and modify paths in [nrel-docker.sh](https://github.com/ecoquants/nrel-docker/blob/master/nrel-docker.sh):
-  - `DIR_SHINY_APPS`
-  - `DIR_SHINY_LOG`
-  - `DIR_GITHUB`
-  - `DIR_DATA`
-  - `DIR_TMP`
-  - `PASSWD`: password for user `ben` to be secretly shared
+    - `DIR_SHINY_APPS`
+    - `DIR_SHINY_LOG`
+    - `DIR_GITHUB`
+    - `DIR_DATA`
+    - `DIR_TMP`
+    - `PASSWD`: password for user `ben` to be secretly shared
   
 2. Run [nrel-docker.sh](https://github.com/ecoquants/nrel-docker/blob/master/nrel-docker.sh) with modified paths.
 

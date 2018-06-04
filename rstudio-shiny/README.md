@@ -9,7 +9,7 @@ To do this, composed a Dockerfile from geoserver R version with Shiny tag:
 
 - added the line `RUN export ADD=shiny && bash /etc/cont-init.d/add` to [rocker-org/geospatial:3.5.0/Dockerfile](https://github.com/rocker-org/geospatial/blob/master/3.5.0/Dockerfile) into new [ecoquants/nrel-docker:rstudio-shiny/Dockerfile](https://github.com/ecoquants/nrel-docker/blob/master/rstudio-shiny/Dockerfile) per [Deploying rocker/geospatial app to rocker/shiny? · Issue #235 · rocker-org/rocker](https://github.com/rocker-org/rocker/issues/235#issuecomment-300065850)
 
-- added other needed packages: `leaflet`, `shinydashboard`
+- added other needed packages, eg: `leaflet`, `shinydashboard`
 
 - `docker build` image, which takes ~ 1.5 hrs initially, 15 min for updates:
 
@@ -24,6 +24,6 @@ To do this, composed a Dockerfile from geoserver R version with Shiny tag:
 - `docker login` and `docker push` image
 
   ```bash
-  docker login # registed as bdbest (bdbest@gmail.com)
+  docker login # registered as bdbest (bdbest@gmail.com)
   docker push "bdbest/rstudio-shiny:R-3.5-geospatial"
   ```
