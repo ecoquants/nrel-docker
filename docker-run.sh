@@ -8,6 +8,7 @@ source "vars.sh"
 docker run --name "rstudio-shiny" \
   --restart unless-stopped \
   -p 8787:8787 -p 80:3838 \
+  -v $DIR_S3:/home/ben \
   -v $DIR_DATA:/data \
   -v $DIR_GITHUB:/github \
   -v $DIR_SHINY_APPS:/srv/shiny-server \
