@@ -1,30 +1,90 @@
 # nrel-docker
 
+
+## Quick Start
+
+The following `docker run` command ...
+
+```bash
+# if need to recreate docker container:
+#   docker stop "nrel-uses-app"; docker rm "nrel-uses-app"
+
+# set password as environment variable
+BEN_PASSWD="?set*password*!"
+
+# run docker, downloading image if needed
+docker run --name "nrel-uses-app" \
+  --restart unless-stopped \
+  -p 8787:8787 -p 80:3838 \
+  -e ROOT=TRUE \
+  -e USER=ben -e PASSWORD=$BEN_PASSWD \
+  -d -t "bdbest/nrel-uses-app"
+```
+... should make the following available:
+
+- http://localhost:8787 for RStudio:
+  ![](https://assets.digitalocean.com/tutorial_images/kobMKpU.png)
+
+- http://localhost/uses for NREL Competing Uses Shiny app (see [github.com/ecoquants/nrel-uses:app](https://github.com/ecoquants/nrel-uses/tree/master/app)):
+  ![](https://github.com/ecoquants/nrel-uses/raw/master/app/images/app_screen.png)
+
+## Server Software
+
 These [Docker](https://www.docker.com/what-docker) instructions are for running the NREL Competing Uses application ([github.com/ecoquants/nrel-uses:app](https://github.com/ecoquants/nrel-uses/tree/master/app)) in the NREL Amazon cluster using the following server software:
 
 - [RStudio](https://www.rstudio.com/products/rstudio/) Server (port 8787): integrated development environment (IDE) for editing R code
 - [Shiny](https://shiny.rstudio.com) Server (port 80): web application framework
 
-To setup the docker image, I ran `docker build` per the `Dockerfile` and `README.md` in [rstudio-shiny/](https://github.com/ecoquants/nrel-docker/tree/master/rstudio-shiny). The data and application files will be managed separately in an Amazon S3 bucket from the server software, and both scripts source a common [`vars.sh`](./blob/master/vars.sh) (in which you probably need to update the `DIR_S3` variable definition):
+## Build Docker Images
 
-1. [`setup-s3.sh`](./setup-s3.sh) (data): sets up data and application files in Amazon S3 bucket
-2. [`docker-run.sh`](./docker-run.sh) (server): runs rstudio-shiny docker image and mounts paths
+### rstudio-shiny
 
-The following directories on the server should have read/write by users `shiny` (uid=998) and `ben` (uid=1000) in [vars.sh](https://github.com/ecoquants/nrel-docker/blob/master/nrel-docker.sh):
+Want spatial capabilities (especially rgdal, raster and leaflet packages) in a common R instance that can be used with:
 
-  - `DIR_S3`
-    - `DIR_SHINY_APPS`
-    - `DIR_SHINY_LOG`
-    - `DIR_GITHUB`
-    - `DIR_DATA`
-    - `DIR_TMP`
-    - `PASSWD`: text file containgin password for user `ben` to be secretly shared and used to log into RStudio IDE (port 8787)
+- RStudio Server (port `8787`): integrated development environment for editing R code
+- Shiny Server (port `3838`): web application framework
 
-If successful, then you should be able to visit:
+To do this, composed a Dockerfile from geoserver R version with Shiny tag:
 
-- http://localhost:8787 for RStudio:
-  ![](https://assets.digitalocean.com/tutorial_images/kobMKpU.png)
+- added the line `RUN export ADD=shiny && bash /etc/cont-init.d/add` to [rocker-org/geospatial:3.5.0/Dockerfile](https://github.com/rocker-org/geospatial/blob/master/3.5.0/Dockerfile) into new [ecoquants/nrel-docker:rstudio-shiny/Dockerfile](https://github.com/ecoquants/nrel-docker/blob/master/rstudio-shiny/Dockerfile) per [Deploying rocker/geospatial app to rocker/shiny? · Issue #235 · rocker-org/rocker](https://github.com/rocker-org/rocker/issues/235#issuecomment-300065850)
 
-- http://localhost/uses for NREL Competing Uses Shiny app:
-  ![](https://github.com/ecoquants/nrel-uses/raw/master/app/images/app_screen.png)  
+- added other needed packages, eg: `leaflet`, `shinydashboard`
+
+- `docker build` image, which took ~ 1.5 hrs initially, then 2 min for updates:
+
+  ```bash
+  # docker rmi bdbest/rstudio-shiny:R-3.5-geospatial; \  
+  date; \
+  cd "/Users/bbest/github/nrel-docker/rstudio-shiny"; \
+  docker build -t "bdbest/rstudio-shiny:R-3.5-geospatial" . \
+  date
+  ```
+
+- `docker login` and `docker push` image (update: 1 min)
+
+  ```bash
+  docker login # registered as bdbest (bdbest@gmail.com)
+  docker push "bdbest/rstudio-shiny:R-3.5-geospatial"
+  ```
   
+### nrel-uses-app
+
+Note that the two copied folders are not in this Github repository because it's either duplicative with an existing Github repo (`github/`[nrel-uses](https://github.com/ecoquants/nrel-uses)) or contain files too big for Github (`data/`).
+
+```bash
+# docker rmi "bdbest/nrel-uses-app"; \  
+
+# update github repo for app
+cd "/Users/bbest/github/nrel-docker/nrel-uses-app/github/nrel-uses"; \
+git pull; \
+
+# build docker image
+cd "/Users/bbest/github/nrel-docker/nrel-uses-app"; \
+docker build -t "bdbest/nrel-uses-app" .; \
+```
+
+```bash
+docker login # registered as bdbest (bdbest@gmail.com)
+docker push "bdbest/nrel-uses-app"
+```
+
