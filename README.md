@@ -23,9 +23,11 @@ docker run --name "nrel-uses-app" \
 ... should make the following available:
 
 - http://localhost:8787 for RStudio:
+
   ![](https://assets.digitalocean.com/tutorial_images/kobMKpU.png)
 
 - http://localhost/uses for NREL Competing Uses Shiny app (see [github.com/ecoquants/nrel-uses:app](https://github.com/ecoquants/nrel-uses/tree/master/app)):
+
   ![](https://github.com/ecoquants/nrel-uses/raw/master/app/images/app_screen.png)
 
 ## Server Software
